@@ -1,8 +1,0 @@
-duckdb==0.6.0
-duckdb-engine==0.6.4
-
-In meltano.yml + CLI:
-DuckDB CLI: 0.7.1
-target-duckdb~=0.4  (I think 0.4.4)
-
-But Superset has some issues browsing tables
