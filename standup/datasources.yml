@@ -1,0 +1,5 @@
+databases:
+- database_name: DuckDB
+  sqlalchemy_uri: duckdb:////project/data/dev/data.duckdb
+  cache_timeout: null
+  expose_in_sqllab: true

@@ -1,0 +1,23 @@
+config:
+  send_anonymous_usage_stats: False
+  use_colors: True
+meltano:
+  target: "{{ env_var('MELTANO_ENVIRONMENT', 'dev') }}"
+  outputs:
+    dev:
+      type: duckdb
+      #path: "{{ env_var('DBT_DUCKDB_PATH') }}"
+      path: "/project/data/dev/data.duckdb"
+      database: data
+      threads: 1
+      #schema: main
+    test:
+      type: duckdb
+      #path: "{{ env_var('DBT_DUCKDB_PATH') }}"
+      path: "/project/data/test/data.duckdb"
+      threads: 4
+    prod:
+      type: duckdb
+      #path: "{{ env_var('DBT_DUCKDB_PATH') }}"
+      path: "/project/data/prod/data.duckdb"
+      threads: 4

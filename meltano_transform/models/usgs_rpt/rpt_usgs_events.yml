@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: rpt_usgs_events
+    description: Reporting table containing a subset of USGS earthquake information for reporting.
+    +tags: 
+      - usgs
+
+    columns:
+      - name: _sdc_batched_at
+        description: Timestamp when the data was captured in the database.
+
+      - name: _sdc_extracted_at
+        description: Timestamp when the data was retrieved from the REST API.
+
+      - name: id
+        description: Unique ID of earthquake or related event assigned by USGS.
+        tests:
+          - not_null
+
+      - name: place
+        description: Brief description of where the earthquake event took place.
+
+      - name: magnitude
+        description: On the Richter scale.

@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: rpt_gie_storage
+    description: Reporting table containing daily gas inventory and flow data at storage facility (SSO) level.
+    +tags: 
+      - gie
+
+    columns:
+      - name: _sdc_batched_at
+        description: Timestamp when the data was captured in the database.
+
+      - name: _sdc_extracted_at
+        description: Timestamp when the data was retrieved from the REST API.
+
+      - name: sso_eic
+        description: Unique ID for SSO.
+        tests:
+          - not_null
+
+      - name: sso_name
+        quote: true
+        description: Name of SSO.
+        tests:
+          - not_null
+
+      - name: status
+        description: E (estimated) C (confirmed) N (no data) 
+
+      - name: sso_fill_ratio
+        description: Gas in storage as a percentage of working gas volume. At SSO/facility level.
+
+      - name: gasinstorage
+        description: Total amount of gas in storage at the facility, status at end of gas day (4 digits accuracy). In TWh.
+
+      - name: comp_gasinstorage
+        description: Gas in storage at company level. Repeated when multiples facilities/records exist for a company.
+
+      - name: workinggasvolume
+        description: Maximum amount that can be stored at the facility (technical capacity) (4 digits accuracy). In TWh.
+
+      - name: injection
+        description: Injection during the day, in GWh/d.
+
+      - name: withdrawal
+        description: Withdrawal during the day, in GWh/d.

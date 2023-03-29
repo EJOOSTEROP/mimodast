@@ -1,0 +1,5 @@
+{
+    "gie_backfill_end": "2023-03-01",
+    "gie_backfill_start": "2023-02-28",
+    "meltano_dag_comments": "The _start and _end dates are used by the dag to backfill gie data."
+}
