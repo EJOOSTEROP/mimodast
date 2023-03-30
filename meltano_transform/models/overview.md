@@ -7,10 +7,15 @@ Mimodast is a minimal modern data stack with working data pipelines in a single 
 
 This **dbt project** defines the transformation and tests related to the two data pipelines included as an example in Mimodast:
 
-- USGS Earthquake data
-- European gas inventory levels provided by GIE.
+- [USGS][USGSEarthquakeAPI-url] Earthquake data
+- European gas inventory levels provided by [GIE][GIEAPI-url].
 
 ...
+
+
+[USGSEarthquakeAPI-url]: https://earthquake.usgs.gov/fdsnws/event/1/
+[GIEAPI-url]: https://agsi.gie.eu/
+[GIEAccount-url]: https://agsi.gie.eu/account
 
 {% enddocs %}
 

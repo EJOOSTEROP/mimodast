@@ -30,7 +30,7 @@ models:
         description: Name of the company.
 
       - name: sso_eic
-        description: Unique ID for SSO.
+        description: Unique ID for SSO/storage facility.
         tests:
           - not_null
 
@@ -55,10 +55,13 @@ models:
         description: Total amount of gas in storage at the facility, status at end of gas day (4 digits accuracy). In TWh.
 
       - name: comp_gasinstorage
-        description: Gas in storage at company level. Repeated when multiples facilities/records exist for a company.
+        description: Gas in storage at company level. Repeated when multiples facilities/records exist for a company. In TWh.
 
       - name: workinggasvolume
         description: Maximum amount that can be stored at the facility (technical capacity) (4 digits accuracy). In TWh.
+
+      - name: comp_workinggasvolume
+        description: Workinggasvolume at company level. Repeated when multiples facilities/records exist for a company. In TWh.
 
       - name: injection
         description: Injection during the day, in GWh/d.
