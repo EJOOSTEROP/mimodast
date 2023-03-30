@@ -384,5 +384,5 @@ Project Link: [https://github.com/EJOOSTEROP/mimodast](https://github.com/EJOOST
 
 [DockerDesktop-url]: https://www.docker.com/products/docker-desktop/
 [USGSEarthquakeAPI-url]: https://earthquake.usgs.gov/fdsnws/event/1/
-[GIEAPI-url]: [https://agsi.gie.eu/]
-[GIEAccount-url]: [https://agsi.gie.eu/account]
+[GIEAPI-url]: https://agsi.gie.eu/
+[GIEAccount-url]: https://agsi.gie.eu/account
