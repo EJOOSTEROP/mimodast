@@ -53,6 +53,8 @@ RUN mkdir -p /${MELTANO_PROJ_ROOT}/data/dev/ \
 ###&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/test/data.duckdb "select * from pg_tables;" \
 ###&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/prod/data.duckdb "select * from pg_tables;"
 
+RUN chmod u+x /project/duckdb_cli/duckdb
+RUN chmod -R u+x /project/data/
 RUN /project/duckdb_cli/duckdb /project/data/dev/data.duckdb "select * from pg_tables;"
 
 RUN meltano invoke airflow dags pause stage_gie_dag \
