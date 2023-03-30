@@ -47,9 +47,9 @@ COPY ./DuckDB_CLI/duckdb_cli-linux-amd64 /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLD
 # https://docs.docker.com/engine/reference/builder/#volume
 RUN mkdir -p /${MELTANO_PROJ_ROOT}/data/dev/ \
 && mkdir -p /${MELTANO_PROJ_ROOT}/data/test/ \
-&& mkdir -p /${MELTANO_PROJ_ROOT}/data/prod/ 
+&& mkdir -p /${MELTANO_PROJ_ROOT}/data/prod/ \
+&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/dev/data.duckdb "select * from pg_tables;" 
 ###\
-###&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/dev/data.duckdb "select * from pg_tables;" \
 ###&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/test/data.duckdb "select * from pg_tables;" \
 ###&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/prod/data.duckdb "select * from pg_tables;"
 
