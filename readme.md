@@ -153,7 +153,7 @@ In order to create the docker container you can do the following:
     ```docker 
     docker create -p5005:5000 -p8093:8088 -p8085:8080 -p8094:8089 -p8095:8090 -p8096:8091 --name mimodast mimodast
     ```
-2. Optionally to copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
+2. Optionally copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
     ```docker
     docker cp .env mimodast:/project/mimodast/.env
     ```
