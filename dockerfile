@@ -4,10 +4,12 @@ ARG BASE_CONTAINER=meltano/meltano:v2.10.0-python3.9
 
 FROM $BASE_CONTAINER as basepython
 
-LABEL version="0.2"
-LABEL "com.example.vendor"="Tern Analytics Inc"
-LABEL description="Mimodast. A minimal modern data stack with working data pipelines in a single Docker container."
-LABEL org.opencontainers.image.authors="Erik O"
+LABEL org.opencontainers.image.version="0.2.0"
+LABEL org.opencontainers.image.authors="Erik Oosterop"
+LABEL org.opencontainers.image.source=https://github.com/ejoosterop/mimodast
+LABEL org.opencontainers.image.title="Mimodast"
+LABEL org.opencontainers.image.description="Mimodast. A minimal modern data stack with working data pipelines in a single Docker container."
+LABEL org.opencontainers.image.licenses=MIT
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt

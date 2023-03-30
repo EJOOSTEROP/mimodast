@@ -148,8 +148,14 @@ In order to create the docker container you can do the following:
    ```
 2. Invoke the following commands to build the Docker container:
     ```docker
-    docker build --no-cache -t mimodast -f dockerfile .  
+    docker build --no-cache -t mimodast -f dockerfile . 
+    ```
+    ```docker 
     docker create -p5005:5000 -p8093:8088 -p8085:8080 -p8094:8089 -p8095:8090 -p8096:8091 --name mimodast mimodast
+    ```
+2. Optionally to copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
+    ```docker
+    docker cp .env mimodast:/project/mimodast/.env
     ```
 3. Start the container.
 
@@ -201,6 +207,8 @@ Meltano's functionality is largely driven by the meltano.yml file. It is used to
 
 This file can for example be edited to change the period or minimum earthquake magnitude selected when getting data from USGS. Search the file for `name: stg_usgs` and review the fews lines following, especially the settings for `starttime` and `minmagnitude`.
 
+Meltano can be used to invoke many of the tools. For example the following command preforms the tests defined in dbt: `meltano invoke dbt-duckdb:test`.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -224,6 +232,7 @@ Superset is used to visualize/dashboard the data. The Superset UI can be accesse
 At the start the database in mimodast is empty so make sure to run the datapipeline(s) before reviewing the dashboards.
 
 Due to an incorrect setup in mimodast individual charts in a dashboard frequently do not show. For now:
+
 - Refresh each chart by selecting this option in the right top corner of each chart. 
 - Possibly wait for other processes accessing the database (say the data pipelines) to complete.
 
@@ -244,7 +253,7 @@ Note that the database maybe unavailable if another process (pipeline, reporting
 ### dbt
 dbt defines data transformations. Mimodast contains transformations from staged data to data used for reporting. dbt is configured by using the files in `/project/mimodast/transformers/`.
 
-New transformations can be triggered by running the pipelines in Airflow; or manually triggered using `meltano invoke dbt-duckdb:run` from within the `/project/mimodast/` folder..
+New transformations can be triggered by running the pipelines in Airflow; or manually triggered using `meltano invoke dbt-duckdb:run` from within the `/project/mimodast/` folder.
 
 Data tests and documentation have also been setup in mimodast.
 

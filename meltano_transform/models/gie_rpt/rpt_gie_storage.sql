@@ -16,7 +16,7 @@ SSO AS
         TRY_CAST(withdrawal AS DOUBLE) as withdrawal,
         url,
         split_part(url, '/', 1) as EIC_likely,
-        split_part(url, '/', 2) as country,
+        split_part(url, '/', 2) as country_likely,
         split_part(url, '/', 3) as company_likely
 FROM 
     {{ source('gie_stage', 'stg_gie_storage') }} t
@@ -39,7 +39,6 @@ select
         sso.gasdaystart,
         country,
         SSO.company_eic,
-        company_name,
         company_name,
         sso_eic,
         sso_name,

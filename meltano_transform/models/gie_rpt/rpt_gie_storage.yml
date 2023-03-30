@@ -13,6 +13,22 @@ models:
       - name: _sdc_extracted_at
         description: Timestamp when the data was retrieved from the REST API.
 
+      - name: gasdaystart
+        description: Date of the observation. Ex. the injection field refers to the injection on this date. gasinstorage as per end of the gasdaystart.
+        tests:
+          - not_null
+
+      - name: country
+        description: Code reflecting the country where the storage facility is located.
+
+      - name: company_eic
+        description: Unique ID for the company that is the primary owner of the storage facility.
+        tests:
+          - not_null
+
+      - name: company_name
+        description: Name of the company.
+
       - name: sso_eic
         description: Unique ID for SSO.
         tests:
@@ -20,12 +36,17 @@ models:
 
       - name: sso_name
         quote: true
-        description: Name of SSO.
+        description: Name of SSO/storage facility.
         tests:
           - not_null
 
       - name: status
         description: E (estimated) C (confirmed) N (no data) 
+        tests:
+          - accepted_values:
+              values: ["E", "C", "N"]
+              config:
+                severity: warn
 
       - name: sso_fill_ratio
         description: Gas in storage as a percentage of working gas volume. At SSO/facility level.
