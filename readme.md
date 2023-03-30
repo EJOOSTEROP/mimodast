@@ -201,6 +201,19 @@ This section highlights some of the key items for the tools being used. For full
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+### Definition and Configuration
+
+The data pipelines are fully defined in a set of files. This includes the source definitions, schedules, dependencies, transformation logic, tests and documentation. (The reporting/dashboards in Superset are defined within Superset, but can be exported from there.)
+
+These files are all found in the `/project/mimodast/` folder in the Docker container. It is best practice to capture this folder in a version control tool. Git is included in the Docker image.
+
+The core files include:
+
+- `/project/mimodast/meltano.yml` - this contains items like the source specification, destination database and schedule.
+- `/project/mimodast/orhestration/dags/gie_dag.py` - python code defining how to orchestrate a data pipeline in Airflow. Note that the GIE data uses this manually created file, whereas the USGS data orhestration relies purely on logic defined in `meltano.yml`.
+- `/project/mimodast/tranformation/` - this folder contains transformation logic (under `models/`) and also tests and documentation.
+
+
 ### Meltano
 
 Meltano's functionality is largely driven by the meltano.yml file. It is used to install most of the other tools contained in the image, to define the ELT pipeline and to schedule the [USGS Earthquake][USGSEarthquakeAPI-url] pipeline. The file can be found at: `/project/mimodast/meltano.yml`.
