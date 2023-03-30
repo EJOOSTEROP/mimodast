@@ -42,6 +42,7 @@ COPY ./dags/. /${MELTANO_PROJ_ROOT}/${PROJECT}/orchestrate/dags/
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy
 ARG DUCKDB_CLI_FOLDER=duckdb_cli
 COPY ./DuckDB_CLI/duckdb_cli-linux-amd64 /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}
+RUN chmod -R u+x /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/
 
 # TODO: put into a Docker volume? Just database or complete ${MELTANO_PROJ_ROOT} folder?
 # https://docs.docker.com/engine/reference/builder/#volume
