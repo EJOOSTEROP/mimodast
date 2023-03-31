@@ -2,5 +2,5 @@ version: 2
 
 # NOTE: THIS DOES NOT WORK. UNCLEAR IF YOU CAN DOCUMENT A TEST AT THIS STAGE.
 tests:
-  - name: stage_timing
+  - name: storage_max
     description: Data needs to be extracted before it can be stored in the database.

@@ -56,7 +56,7 @@ def stage_gie_dag(my_date : str = '-'):
     run_this_2nd = BashOperator(
         task_id='Update_reporting_table',
         
-        bash_command = "cd " + PROJECT_ROOT + "; ENV_DATE_GIE={{ dag_run.conf.get('my_date', '-') if dag_run else '-' }} " + MELTANO_BIN + " invoke " + "dbt-duckdb:run --select tag:gie",
+        bash_command = "cd " + PROJECT_ROOT + "; ENV_DATE_GIE={{ dag_run.conf.get('my_date', '-') if dag_run else '-' }} " + MELTANO_BIN + " invoke " + "dbt-duckdb:build --select tag:gie",
     )
     
     run_this_2nd
@@ -96,7 +96,7 @@ def stage_gie_backfill_dag():
     run_this_2nd = BashOperator(
         task_id='Update_reporting_table',
         
-        bash_command = "cd " + PROJECT_ROOT + "; " + MELTANO_BIN + " invoke " + "dbt-duckdb:run --select tag:gie",
+        bash_command = "cd " + PROJECT_ROOT + "; " + MELTANO_BIN + " invoke " + "dbt-duckdb:build --select tag:gie",
     )
     
     run_this_2nd
