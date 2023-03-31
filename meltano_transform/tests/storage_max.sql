@@ -1,3 +1,3 @@
 SELECT *
 FROM {{ ref('rpt_gie_storage')}}
-WHERE gasinstorage > workinggasvolume
+WHERE gasinstorage - workinggasvolume > 1
