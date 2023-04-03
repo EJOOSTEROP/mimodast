@@ -51,7 +51,8 @@ RUN mkdir -p /${MELTANO_PROJ_ROOT}/data/dev/ \
 && mkdir -p /${MELTANO_PROJ_ROOT}/data/prod/ \
 && /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/dev/data.duckdb "select * from pg_tables;"  \
 && /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/test/data.duckdb "select * from pg_tables;" \
-&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/prod/data.duckdb "select * from pg_tables;"
+&& /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/prod/data.duckdb "select * from pg_tables;" \
+&& meltano invoke dbt-duckdb:deps
 
 
 ###RUN chmod -R u+x /project/data/
