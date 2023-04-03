@@ -60,6 +60,18 @@ plugins:
       params:
         date: $ENV_DATE_GIE
         #date: '2023-02-15'
+      stream_maps:
+        stg_gie_storage:
+          key_hash: md5(config['hash_seed'] + (gasDayStart + code))
+          #__alias__: stg_gie_storage_vX
+        stg_gie_company:
+          key_hash: md5(config['hash_seed'] + (gasDayStart + code))
+        stg_gie_country:
+          key_hash: md5(config['hash_seed'] + (gasDayStart + code))
+        stg_gie_region:
+          key_hash: md5(config['hash_seed'] + (gasDayStart + code))
+      stream_map_config:
+        hash_seed: 01AWZh7A6DzGm6iJZZ2T          
       streams:
       - name: stg_gie_storage
         path: /api
@@ -132,7 +144,6 @@ plugins:
     pip_url: target-duckdb~=0.4
     config:
       add_metadata_columns: true
-      #default_target_schema: gie_stage
       default_target_schema: main
       filepath: $DB_LOCATION
       data_flattening_max_level: 10
@@ -140,7 +151,6 @@ plugins:
     inherit_from: target-duckdb
     config:
       add_metadata_columns: true
-      #default_target_schema: usgs_stage
       default_target_schema: main
       filepath: $DB_LOCATION
       data_flattening_max_level: 10
