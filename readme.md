@@ -100,7 +100,7 @@ A minimal modern data stack with working data pipelines in a single Docker conta
 
 Mimodast can be used to explore the functionality of the tools by using the examples as-is; and to modify and expand on the exmples for further exploration.
 
-It is a starting point for exploration. The project is not a showcase of all or even the best functionality that each tool has to offer. The tools have more functionality than is accounted for in Mimodast.
+It is a starting point for exploration. The project is not a showcase of all or even the best functionality that each tool has to offer.
 
 <!--
 Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `EJOOSTEROP`, `mimodast`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `Mimodast`, `project_description`
@@ -147,13 +147,13 @@ In order to create the docker container you can do the following:
    git clone https://github.com/EJOOSTEROP/mimodast.git
    ```
 2. Invoke the following commands to build the Docker container:
-    ```docker
+    ```sh
     docker build --no-cache -t mimodast -f dockerfile . 
     ```
     ```docker 
     docker create -p5005:5000 -p8093:8088 -p8085:8080 -p8094:8089 -p8095:8090 -p8096:8091 --name mimodast mimodast
     ```
-2. Optionally copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
+2. Optionally (required for the [European Gas Inventory][GIEAPI-url] dataset) copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
     ```docker
     docker cp .env mimodast:/project/mimodast/.env
     ```
@@ -166,7 +166,7 @@ In order to create the docker container you can do the following:
 
 The image contains ELT pipelines for two data sets. The [USGS Earthquake][USGSEarthquakeAPI-url] dataset can be used right out of the box. 
 
-For the [GIE Gas Inventory][GIEAPI-url] dataset an API key is required. Create a free [GIE account][GIEAccount-url] to obtain the key. 
+For the [GIE Gas Inventory][GIEAPI-url] dataset an API key is required. Create a free and immediate [GIE account][GIEAccount-url] to obtain the key. 
 
 This key needs to be available as an environment variable (ENV_GIE_XKEY) in the Docker container (it is referenced in the `meltano.yml` configuration file). One way to accomplish this is by creating a `.env` file in the `/projet/mimodast/` folder containing:
 >`ENV_GIE_XKEY="YOUR-API-KEY"`
@@ -268,7 +268,7 @@ dbt defines data transformations. Mimodast contains transformations from staged 
 
 New transformations can be triggered by running the pipelines in Airflow; or manually triggered using `meltano invoke dbt-duckdb:run` from within the `/project/mimodast/` folder.
 
-Data tests and documentation have also been setup in mimodast.
+Data tests and documentation have been setup in mimodast.
 
 The documentation can be viewed at `localhost:8094`. The tests can be triggered by invoking `meltano invoked dbt-duckdb:test` from within the `/project/mimodast/` folder.
 
@@ -285,6 +285,7 @@ The documentation can be viewed at `localhost:8094`. The tests can be triggered 
 
 - [ ] Include [Great Expectations][GreatExpectations-url] for data quality purposes.
 - [ ] Add a dbt model using [PRQL][PRQL-url] language instead of SQL.
+- [ ] Add a metadata framework like Amundsen, OpenLineage or similar.
 
 <!--
 - [ ] Feature 3
@@ -293,6 +294,10 @@ The documentation can be viewed at `localhost:8094`. The tests can be triggered 
 
 See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features (and known issues).
 
+Observed issues:
+[ ] Clashing DuckDB database access when viewing data in Superset while ELT pipeline is running (or vice versa). Workaround: wait for ELT to complete. This should be a fixable issue (though I don't know how at the moment.)
+[ ] Superset dashboard cannot currently refresh all elements in a dashboard at once (an error shows for the unsuccessful grahps). Workaround: manually refresh each graph using Superset UI. This should be fixable in the same way as the prior issue.
+[ ] Logging into Superset and Airflow simutaneously seems to encounter problems. Workaround: close the browser tab with the 'other' app, open a new clean tab to log into the desired app.
 
 
 
