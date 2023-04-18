@@ -381,7 +381,7 @@ The following differences are noteworthy:
         stg_gie_storage:
           key_hash: md5(config['hash_seed'] + (gasDayStart + code))
 ```
-5. Additional test types are included. As for example (from `rpt_gie_storage.yml`):
+5. Additional test types are included. For example (from `rpt_gie_storage.yml`):
 ```yaml
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -404,18 +404,9 @@ The following differences are noteworthy:
     - [ ] Nested Feature
 -->
 
-See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features (and known issues).
-
-Observed issues:
-[ ] Clashing DuckDB database access when viewing data in Superset while ELT pipeline is running (or vice versa). Workaround: wait for ELT to complete. This should be a fixable issue (though I don't know how at the moment.)
-[ ] Superset dashboard cannot currently refresh all elements in a dashboard at once (an error shows for the unsuccessful grahps). Workaround: manually refresh each graph using Superset UI. This should be fixable in the same way as the prior issue.
-[ ] Logging into Superset and Airflow simutaneously seems to encounter problems. Workaround: close the browser tab with the 'other' app, open a new clean tab to log into the desired app.
-
-
+See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features and known issues.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -434,12 +425,10 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. <!-- See `LICENSE.txt` for more information.--> The tools and the sample data are subject to their own respective licenses.
+Distributed under the MIT License. See `LICENSE.txt` for more information. The tools and the sample data are subject to their own respective licenses.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
