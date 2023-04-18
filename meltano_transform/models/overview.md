@@ -2,6 +2,10 @@
 
 ![mimodast Logo](https://github.com/EJOOSTEROP/mimodast/blob/master/assets/hatchful/logo_transparent.png)
 
+<a href="https://github.com/EJOOSTEROP/mimodast">
+    <img src="assets/hatchful/logo_transparent.png" alt="Logo" width="180" height="180">
+</a>
+
 # Mimodast dbt Project
 Mimodast is a minimal modern data stack with working data pipelines in a single Docker container.
 

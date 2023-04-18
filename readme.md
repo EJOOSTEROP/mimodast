@@ -98,9 +98,9 @@ A minimal modern data stack with working data pipelines in a single Docker conta
 - [Superset][Superset-url] - data visualization and exploration platform
 - Sample data pipelines with [USGS Earthquake][USGSEarthquakeAPI-url] data and [European Gas Inventory][GIEAPI-url] levels.
 
-Mimodast can be used to explore the functionality of the tools by using the examples as-is; and to modify and expand on the exmples for further exploration.
+Explore the functionality of the tools by using the examples as-is; and to modify and expand on the exmples for further exploration.
 
-It is a starting point for exploration. The project is not a showcase of all or even the best functionality that each tool has to offer. The tools have more functionality than is accounted for in Mimodast.
+This is a convenient starting point for exploration. The project is not a showcase of all or even the best functionality that each tool has to offer.
 
 <!--
 Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `EJOOSTEROP`, `mimodast`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `Mimodast`, `project_description`
@@ -146,60 +146,57 @@ In order to create the docker container you can do the following:
    ```sh
    git clone https://github.com/EJOOSTEROP/mimodast.git
    ```
-2. Invoke the following commands to build the Docker container:
-    ```docker
+2. Invoke the following commands to create the Docker container:
+    ```sh
     docker build --no-cache -t mimodast -f dockerfile . 
     ```
     ```docker 
     docker create -p5005:5000 -p8093:8088 -p8085:8080 -p8094:8089 -p8095:8090 -p8096:8091 --name mimodast mimodast
     ```
-2. Optionally copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
+2. Optionally (required for the [European Gas Inventory][GIEAPI-url] dataset) copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
     ```docker
     docker cp .env mimodast:/project/mimodast/.env
     ```
-3. Start the container.
+2. Start the container.
+2. For starters:
+    - Open the docker container terminal and peruse the meltano.yml file and other files/folders at `project\mimodast\`.
+    - Navigate to localhost:8085 to see the Airflow orhestrator (incl scheduler) interface. Use admin/admin as username/password.
+    - Navigate to localhost:8093 to see the Superset dashboard. Use admin/admin as username/password.
+  - NOTE: allow for some time (~1 minute) for the container to start up all processes. On first startup wait for the completion of the  first run of the USGS pipeline before reviewing Superset.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### API key <a name="api-key"></a>
 
-The image contains ELT pipelines for two data sets. The [USGS Earthquake][USGSEarthquakeAPI-url] dataset can be used right out of the box. 
+The image contains ELT pipelines for two data sets. The [USGS Earthquake][USGSEarthquakeAPI-url] dataset can be used right out of the box. This dataset is a good enough dataset to explore the core functionalities.
 
-For the [GIE Gas Inventory][GIEAPI-url] dataset an API key is required. Create a free [GIE account][GIEAccount-url] to obtain the key. 
+For the [GIE Gas Inventory][GIEAPI-url] dataset an API key is required. Create a free and immediate [GIE account][GIEAccount-url] to obtain the key.
 
 This key needs to be available as an environment variable (ENV_GIE_XKEY) in the Docker container (it is referenced in the `meltano.yml` configuration file). One way to accomplish this is by creating a `.env` file in the `/projet/mimodast/` folder containing:
 >`ENV_GIE_XKEY="YOUR-API-KEY"`
 
-
-<!--
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/EJOOSTEROP/mimodast.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
--->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The pipelines include the injection of data from source into a database, transformation, data testing, documentation and reporting. Various tools are leveraged.
+Two basic examples are used to illustrate an extensive date pipeline encompassing the following components:
 
-This section highlights some of the key items for the tools being used. For full documentation refer to the respective websites of each tool.
+- <a href="#obtaining-the-data-from-source">obtaining the data from source</a>
+- <a href="#capturing-data-in-a-database">capturing the data in a database</a>
+- <a href="#transformation">transformation</a>
+- <a href="#scheduling">scheduling</a>
+- <a href="#testing">testing of data</a>
+- <a href="#reporting">reporting</a>
+- <a href="#documentation">integrated documentation of the process</a>
+
+The two pipelines involve [USGS Earthquake][USGSEarthquakeAPI-url] data and [European Gas Inventory][GIEAPI-url] data.
+
+Below we highlight the core configuration for these components. For (much) more additional information refer to the respective documentation of the tools.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ### Definition and Configuration
 
@@ -207,98 +204,209 @@ The data pipelines are fully defined in a set of files. This includes the source
 
 These files are all found in the `/project/mimodast/` folder in the Docker container. It is best practice to capture this folder in a version control tool. Git is included in the Docker image.
 
-The core files include:
+Some of the core files include:
 
 - `/project/mimodast/meltano.yml` - this contains items like the source specification, destination database and schedule.
 - `/project/mimodast/orhestration/dags/gie_dag.py` - python code defining how to orchestrate a data pipeline in Airflow. Note that the GIE data uses this manually created file, whereas the USGS data orhestration relies purely on logic defined in `meltano.yml`.
 - `/project/mimodast/tranformation/` - this folder contains transformation logic (under `models/`) and also tests and documentation.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Meltano
+### USGS Earthquake Data Pipeline
 
-Meltano's functionality is largely driven by the meltano.yml file. It is used to install most of the other tools contained in the image, to define the ELT pipeline and to schedule the [USGS Earthquake][USGSEarthquakeAPI-url] pipeline. The file can be found at: `/project/mimodast/meltano.yml`.
+#### Obtaining the data from source
 
-This file can for example be edited to change the period or minimum earthquake magnitude selected when getting data from USGS. Search the file for `name: stg_usgs` and review the fews lines following, especially the settings for `starttime` and `minmagnitude`.
+The `meltano.yml` file specifies how to obtain the data from source. Specifically, configuring the connection to the data source is centered around this `tap` section in `meltano.yml` (To be found at `/project/mimodast/meltano.yml` in the Docker container.):
 
-Meltano can be used to invoke many of the tools. For example the following command preforms the tests defined in dbt: `meltano invoke dbt-duckdb:test`.
+```yaml
+  - name: stg_usgs
+    inherit_from: tap-rest-api-msdk
+    config:
+      api_url: https://earthquake.usgs.gov/fdsnws
+```
+
+In the example, this tap is inherited from a publicly available tap for a REST API:
+
+```yaml
+plugins:
+  extractors:
+  - name: tap-rest-api-msdk
+    variant: widen
+    pip_url: tap-rest-api-msdk
+ ```
+
+`pip_url` specifies the location of the source code for the tap plug-in. In this case the actual location is derived by Meltano based on the tap name. Note that the tap for the other data pipeline (Gas Inventory data) also inherits from the same tap, but is clearly configured differently.
+
+`meltano.yml` contains the ful configuration of the tap. For example the following element specifies to select only earthquakes with a minimum magnitute:
+
+```yaml
+          minmagnitude: 6
+```
+
+Many more items are configured for this tap.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+#### Capturing data in a database
 
-### Airflow
+The following section in `meltano.yml` configures the database where the data will be stored:
 
-Airflow is used to trigger the ELT pipelines based on a schedule. The Airflow UI can be access from `localhost:8085`, with `admin/admin` as user/password. There are three pipelines: one for USGS and two for GIE.
+```yaml
+  - name: target-duckdb
+    pip_url: target-duckdb~=0.4
+    config:
+      add_metadata_columns: true
+      default_target_schema: main
+      filepath: $DB_LOCATION
+      data_flattening_max_level: 10
+```
 
-The USGS pipeline and schedule are fully managed by meltano.yml. Note that one may need to wait (up to a minute) for changes in meltano.yml to be recognized by Airflow.
+A [duckdb][DuckDB-url] database is used in this example. This database contains the data captured from source and is accessed for reporting. The database file is located at `/project/data/dev/data.duckdb`. This database location is specified in `meltano.yml`.
 
-The GIE pipeline and schedule are defined as DAGs in a python file located at `/project/mimodast/orchestrate/dags/gie_dag.py`. The GIE pipelines are initially paused as they will not function without the <a href="#api-key">API key</a> referenced above. Once the API key has been provided the GIE pipelines can be activated using the Airflow UI.
+The image contains the DuckDB command line interface. Use the command:
 
-The GIE backfill pipeline uses Airflow variables to select the period for which to capture historic data. These variables can be changed using the Airflow UI. Again one may need to wait (up to a minute) for any changes to be recognized by Airflow. Note that this is not a [best practice][AirflowBestPractices-url] design but is used for simplicity.
+```sh
+/project/duckdb_cli/duckdb /project/data/dev/data.duckdb
+```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+to start the CLI and browse the database using SQL (the CLI has a help function and is documented online).
 
-
-### Superset
-
-Superset is used to visualize/dashboard the data. The Superset UI can be accessed from `localhost:8093`, with `admin/admin` as user/password. Two dashboards exist.
-
-At the start the database in mimodast is empty so make sure to run the datapipeline(s) before reviewing the dashboards.
-
-Due to an incorrect setup in mimodast individual charts in a dashboard frequently do not show. For now:
-
-- Refresh each chart by selecting this option in the right top corner of each chart. 
-- Possibly wait for other processes accessing the database (say the data pipelines) to complete.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-### DuckDB
-
-The data for the pipelines is captured in a DuckDB database. The database is located at `/project/data/dev/data.duckdb`. 
-
-The image contains the DuckDB command line interface which can be used to query the database. The command `/project/duckdb_cli/duckdb /project/data/dev/data.duckdb` will start the CLI and open the database (the CLI has a help function and is documented online).
-
-Note that the database maybe unavailable if another process (pipeline, reporting) is already accessing it.
+Note that the database maybe unavailable if another process (pipeline, reporting) is already accessing it, resulting in an error message.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+#### Transformation
 
-### dbt
-dbt defines data transformations. Mimodast contains transformations from staged data to data used for reporting. dbt is configured by using the files in `/project/mimodast/transformers/`.
+Transformation is performed by [dbt][dbt-url] and specified by a set of `SQL` files. In the container these are located at: `/project/mimodast/transform/models/usgs_rpt/`.
 
-New transformations can be triggered by running the pipelines in Airflow; or manually triggered using `meltano invoke dbt-duckdb:run` from within the `/project/mimodast/` folder.
-
-Data tests and documentation have also been setup in mimodast.
-
-The documentation can be viewed at `localhost:8094`. The tests can be triggered by invoking `meltano invoked dbt-duckdb:test` from within the `/project/mimodast/` folder.
-
-
+For this example pipeline the transformation is fully captured in `rpt_usgs_events.sql`. In this case the 'transformation' simply copies some source attributes into a reporting table.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+#### Scheduling
 
+The following section of `meltano.yml` configures the pipeline's run schedule:
 
+```yaml
+schedules:
+- name: USGS-Earthquake
+  interval: 35 */1 * * *
+  job: usgs-to-duckdb-rpt
+  start_date: 2023-01-01 15:40:21.295936
+```
 
+The scheduling `interval` uses the [Cron job][Cron-url] format. In this case the pipeline is schedulted to run 35 minutes after every hour.
+
+This section refers to a `job`, wich is configured in the same file. This job consists of a `tap` to obtain data from source, a loader specifying where the data needs to be stored and a transformation component:
+
+```yaml
+jobs:
+- name: usgs-to-duckdb-rpt
+  tasks:
+  - stg_usgs target-duckdb-usgs dbt-duckdb:usgs
+```
+
+In this docker container [Airflow][Airflow-url] is used as the scheduler/orchestrator. Meltano ensures that the specified schedule is set in Airflow. Note that the schedule can also be set directly in Airflow, as is the case for our [GIE Gas Inventory][GIEAPI-url] pipeline.
+
+To monitor job progress access the Airflow UI from `localhost:8085`, with `admin/admin` as user/password. There are three pipelines: one for USGS and two for GIE.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+#### Testing
+
+Data tests are specified in two locations:
+
+- SQL files in the `/project/mimodast/transform/models/tests/` folder. (In this specific case just a basic test that the magnitude of an earthquake is not unrealistically high.) Tests are performed by dbt.
+- yml files in the `/project/mimodast/transform/models/usgs_rpt/` folder. For example the following tests that the `id` field is not null:
+
+```yaml
+      - name: id
+        description: Unique ID of earthquake or related event assigned by USGS.
+        tests:
+          - not_null
+```
+
+Tests can be initiated manually from the command line in the Docker container:
+```sh
+cd /project/mimodast/
+meltano invoke dbt-duckdb:test
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+#### Reporting
+
+[Superset][Superset-url] is used to visualize/dashboard the data. The Superset UI can be accessed from `localhost:8093`, with `admin/admin` as user/password.
+
+Initially the database in mimodast is empty so make sure to run the datapipeline(s) before reviewing the dashboards.
+
+Due to an outstanding issue in mimodast, individual charts in a dashboard frequently do not show. For now:
+
+- Refresh each chart by selecting this option in the right top corner of each chart.
+- Possibly wait for other processes accessing the database (say the data pipelines) to complete
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+#### Documentation
+
+dbt is used for documentation of data and processes. Documentation is maitained in .yml files and `overview.md` in the `/project/mimodast/transform/models/` folder.
+
+This documentation can be consulted at `localhost:8094`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Gas Inventory Pipeline
+
+The [Gas][GIEAPI-url] pipeline is setup in a similar way as the USGS earthquake pipeline.
+
+The following differences are noteworthy:
+
+1. The pipeline requires an account to be setup. This is free, quick and avaiable to everyone. Refer <a href="#api-key">here</a> for instructions.
+    - Note that for this reasong the jobs/DAGs for this pipeline are initially paused in Airflow. Once the API key is obtained an setup in the docker container use the Airflow UI to unpause the jobs.
+2. The `meltano.yml` file is configured to obtain this key from an environment variable as follows:
+
+```yaml
+      headers:
+        x-key: $ENV_GIE_XKEY
+```
+
+3. Schedule/orhestration is not configured using `meltano.yml` but instead with two manually coded Airflow DAGs. The Python file containing the code for these can be found at `/project/mimodast/orchestrate/dags/gie_dag.py`.
+    - The backfill dag captures historic data from source. To specify the date range, two Airflow variables are used. These values can be changed using the Airflow UI.
+    - It takes some time (<1 minute) for the new date range to be reflected in the DAG.
+    - Note that using Airflow variables in a DAG in this way is not a [best practice][AirflowBestPractices-url] design but is used for simplicity.
+4. Meltano's inline data mapping functionality is used to create hashed ID fields when obtaining data from source using the following configuration in `meltano.yml`:
+
+```yaml
+      stream_maps:
+        stg_gie_storage:
+          key_hash: md5(config['hash_seed'] + (gasDayStart + code))
+```
+5. Additional test types are included. For example (from `rpt_gie_storage.yml`):
+```yaml
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - sso_eic
+            - gasdaystart 
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
 
 - [ ] Include [Great Expectations][GreatExpectations-url] for data quality purposes.
 - [ ] Add a dbt model using [PRQL][PRQL-url] language instead of SQL.
+- [ ] Add a metadata framework like Amundsen, OpenLineage or similar.
 
 <!--
 - [ ] Feature 3
     - [ ] Nested Feature
 -->
 
-See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features (and known issues).
-
-
-
+See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features and known issues.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -317,12 +425,10 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. <!-- See `LICENSE.txt` for more information.--> The tools and the sample data are subject to their own respective licenses.
+Distributed under the MIT License. See `LICENSE.txt` for more information. The tools and the sample data are subject to their own respective licenses.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -395,6 +501,7 @@ Project Link: [https://github.com/EJOOSTEROP/mimodast](https://github.com/EJOOST
 [GreatExpectations-url]: https://greatexpectations.io/
 [PRQL-url]: https://prql-lang.org/
 
+[Cron-url]: https://en.wikipedia.org/wiki/Cron
 [DockerDesktop-url]: https://www.docker.com/products/docker-desktop/
 [USGSEarthquakeAPI-url]: https://earthquake.usgs.gov/fdsnws/event/1/
 [GIEAPI-url]: https://agsi.gie.eu/
