@@ -179,9 +179,6 @@ plugins:
       markupsafe==2.0.1
       duckdb-engine==0.7.0
 #      git+https://github.com/meltano/superset-ext.git@main
-#      flask==2.0.3 werkzeug==2.0.3 jinja2==3.0.1 wtforms==2.3.3
-#      cryptography==3.4.7
-#      markupsafe==2.0.1
   - name: dbt-duckdb
     variant: jwills
     pip_url: dbt-core~=1.4.0 dbt-duckdb~=1.4.0
