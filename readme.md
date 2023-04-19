@@ -141,7 +141,7 @@ Have [Docker Desktop][DockerDesktop-url] installed.
 ### Installation
 
 In order to create the docker container you can do the following:
-
+<!--
 1. Clone this GIT repo:
    ```sh
    git clone https://github.com/EJOOSTEROP/mimodast.git
@@ -153,15 +153,21 @@ In order to create the docker container you can do the following:
     ```docker 
     docker create -p5005:5000 -p8093:8088 -p8085:8080 -p8094:8089 -p8095:8090 -p8096:8091 --name mimodast mimodast
     ```
-2. Optionally (required for the [European Gas Inventory][GIEAPI-url] dataset) copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
+-->
+1. Create a container from the published docker image:
+    ```docker
+    docker create -p8093:8088 -p8085:8080 -p8094:8089 --name mimodast ghcr.io/ejoosterop/mimodast
+    ```
+2. Optionally (required for the [European Gas Inventory][GIEAPI-url] dataset; this can safely be done at a later stage) copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
     ```docker
     docker cp .env mimodast:/project/mimodast/.env
     ```
-2. Start the container.
+2. Start the container (using the Docker Desktop UI or command line).
 2. For starters:
-    - Open the docker container terminal and peruse the meltano.yml file and other files/folders at `project\mimodast\`.
+    - Open the docker container terminal and peruse the meltano.yml file and other files/folders at `/project/mimodast/`.
     - Navigate to localhost:8085 to see the Airflow orhestrator (incl scheduler) interface. Use admin/admin as username/password.
     - Navigate to localhost:8093 to see the Superset dashboard. Use admin/admin as username/password.
+    - Navigate to localhost:8094 to see data pipeline documentation (from dbt).
   - NOTE: allow for some time (~1 minute) for the container to start up all processes. On first startup wait for the completion of the  first run of the USGS pipeline before reviewing Superset.
 
 
@@ -174,7 +180,7 @@ The image contains ELT pipelines for two data sets. The [USGS Earthquake][USGSEa
 
 For the [GIE Gas Inventory][GIEAPI-url] dataset an API key is required. Create a free and immediate [GIE account][GIEAccount-url] to obtain the key.
 
-This key needs to be available as an environment variable (ENV_GIE_XKEY) in the Docker container (it is referenced in the `meltano.yml` configuration file). One way to accomplish this is by creating a `.env` file in the `/projet/mimodast/` folder containing:
+This key needs to be available as an environment variable (ENV_GIE_XKEY) in the Docker container (it is referenced in the `meltano.yml` configuration file) in order to run the GIE pipelines. One way to accomplish this is by creating a `.env` file in the `/projet/mimodast/` folder containing:
 >`ENV_GIE_XKEY="YOUR-API-KEY"`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -395,15 +401,13 @@ The following differences are noteworthy:
 <!-- ROADMAP -->
 ## Roadmap
 
+<!--
 - [ ] Include [Great Expectations][GreatExpectations-url] for data quality purposes.
 - [ ] Add a dbt model using [PRQL][PRQL-url] language instead of SQL.
 - [ ] Add a metadata framework like Amundsen, OpenLineage or similar.
-
-<!--
 - [ ] Feature 3
     - [ ] Nested Feature
 -->
-
 See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features and known issues.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
