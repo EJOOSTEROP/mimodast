@@ -1,6 +1,8 @@
-ARG BASE_CONTAINER=meltano/meltano:v2.10.0-python3.9
+ARG BASE_CONTAINER=meltano/meltano:v2.17.1-python3.9
+#ARG BASE_CONTAINER=meltano/meltano:v2.10.0-python3.9
 # TODO: consider meltano/meltano:v2-python3.9
-# metano tap-rest-api-msdk requires python ~3.9
+# meltano tap-rest-api-msdk requires python ~3.9
+
 
 FROM $BASE_CONTAINER as basepython
 
@@ -12,6 +14,7 @@ LABEL org.opencontainers.image.description="Mimodast. A minimal modern data stac
 LABEL org.opencontainers.image.licenses=MIT
 
 COPY requirements.txt .
+#RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 #duckdb --> numpy-1.23.4
 
