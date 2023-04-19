@@ -175,17 +175,21 @@ plugins:
   - name: superset
     variant: apache
     pip_url: apache-superset==2.0.0 flask==2.0.3 werkzeug==2.0.3 jinja2==3.0.1 wtforms==2.3.3
-      git+https://github.com/meltano/superset-ext.git@main cryptography==3.4.7 markupsafe==2.0.1 
+      cryptography==3.4.7
+      markupsafe==2.0.1
       duckdb-engine==0.7.0
+#      git+https://github.com/meltano/superset-ext.git@main
   - name: dbt-duckdb
     variant: jwills
-    pip_url: dbt-core~=1.4.0 dbt-duckdb~=1.4.0 git+https://github.com/meltano/dbt-ext.git@main
+    pip_url: dbt-core~=1.4.0 dbt-duckdb~=1.4.0
+      git+https://github.com/meltano/dbt-ext.git@main
     commands:
       usgs:
         args: run --select tag:usgs
-        description: Runsd dbt USGS (earthquake data) jobs instead of all dbt jobs.
+        description: Runs dbt USGS (earthquake data) jobs instead of all dbt jobs.
       gie:
         args: run --select tag:gie
+        description: Runs dbt GIE (gas inventory data) jobs instead of all dbt jobs.    
 jobs:
 - name: usgs-to-duckdb-rpt
   tasks:

@@ -1,6 +1,7 @@
-ARG BASE_CONTAINER=meltano/meltano:v2.10.0-python3.9
+ARG BASE_CONTAINER=meltano/meltano:v2.17.1-python3.9
 # TODO: consider meltano/meltano:v2-python3.9
-# metano tap-rest-api-msdk requires python ~3.9
+# meltano tap-rest-api-msdk requires python ~3.9
+
 
 FROM $BASE_CONTAINER as basepython
 
@@ -12,8 +13,8 @@ LABEL org.opencontainers.image.description="Mimodast. A minimal modern data stac
 LABEL org.opencontainers.image.licenses=MIT
 
 COPY requirements.txt .
+#RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-#duckdb --> numpy-1.23.4
 
 # For the healthcheck
 RUN apt update \
@@ -54,18 +55,12 @@ RUN mkdir -p /${MELTANO_PROJ_ROOT}/data/dev/ \
 && /${MELTANO_PROJ_ROOT}/${DUCKDB_CLI_FOLDER}/duckdb /${MELTANO_PROJ_ROOT}/data/prod/data.duckdb "select * from pg_tables;" \
 && meltano invoke dbt-duckdb:deps
 
-
-###RUN chmod -R u+x /project/data/
-###RUN /project/duckdb_cli/duckdb /project/data/dev/data.duckdb "select * from pg_tables;"
-
 RUN meltano invoke airflow dags pause stage_gie_dag \
 && meltano invoke airflow dags pause stage_gie_backfill_dag
 
 COPY ./standup/. .
 RUN meltano invoke airflow variables import airflowvariables.json \
 && meltano invoke superset import-dashboards -p dashboards.zip
-### \
-### && meltano invoke superset import_datasources -p database.zip
 
 COPY ./meltano_transform/. /${MELTANO_PROJ_ROOT}/${PROJECT}/transform/
 
