@@ -6,6 +6,7 @@ SSO AS
         gasdaystart::DATE gasdaystart,
         split_part(url, '/', 2) as country,
         split_part(url, '/', 3) as company_eic,
+        key_hash,
         code as sso_eic,
         name as sso_name,
         status,
@@ -36,6 +37,7 @@ FROM
 select 
         _sdc_batched_at,
         _sdc_extracted_at,
+        key_hash,
         sso.gasdaystart,
         country,
         SSO.company_eic,

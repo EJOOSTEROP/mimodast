@@ -6,12 +6,24 @@ models:
     +tags: 
       - gie
 
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - sso_eic
+            - gasdaystart      
+
     columns:
       - name: _sdc_batched_at
         description: Timestamp when the data was captured in the database.
 
       - name: _sdc_extracted_at
         description: Timestamp when the data was retrieved from the REST API.
+
+      - name: key_hash
+        description: Has of sso_eic and gasdaystart.
+        tests:
+          - unique
+          - not_null
 
       - name: gasdaystart
         description: Date of the observation. Ex. the injection field refers to the injection on this date. gasinstorage as per end of the gasdaystart.
