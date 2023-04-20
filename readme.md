@@ -98,7 +98,7 @@ A minimal modern data stack with working data pipelines in a single Docker conta
 - [Superset][Superset-url] - data visualization and exploration platform
 - Sample data pipelines with [USGS Earthquake][USGSEarthquakeAPI-url] data and [European Gas Inventory][GIEAPI-url] levels.
 
-Explore the functionality of the tools by using the examples as-is; and to modify and expand on the exmples for further exploration.
+Explore the functionality of the tools by using the examples as-is; modify and expand on the examples for further exploration.
 
 This is a convenient starting point for exploration. The project is not a showcase of all or even the best functionality that each tool has to offer.
 
@@ -140,7 +140,6 @@ Have [Docker Desktop][DockerDesktop-url] installed.
 
 ### Installation
 
-In order to create the docker container you can do the following:
 <!--
 1. Clone this GIT repo:
    ```sh
@@ -206,15 +205,15 @@ Below we highlight the core configuration for these components. For (much) more 
 
 ### Definition and Configuration
 
-The data pipelines are fully defined in a set of files. This includes the source definitions, schedules, dependencies, transformation logic, tests and documentation. (The reporting/dashboards in Superset are defined within Superset, but can be exported from there.)
+The data pipelines are fully defined in a set of files. This includes the source definitions, schedules, dependencies, transformation logic, tests and documentation. The reporting/dashboards in Superset are defined within Superset, but can be exported from there.
 
 These files are all found in the `/project/mimodast/` folder in the Docker container. It is best practice to capture this folder in a version control tool. Git is included in the Docker image.
 
 Some of the core files include:
 
-- `/project/mimodast/meltano.yml` - this contains items like the source specification, destination database and schedule.
+- `/project/mimodast/meltano.yml` - this includes configurations for data source specification, destination database, schedule and more.
 - `/project/mimodast/orhestration/dags/gie_dag.py` - python code defining how to orchestrate a data pipeline in Airflow. Note that the GIE data uses this manually created file, whereas the USGS data orhestration relies purely on logic defined in `meltano.yml`.
-- `/project/mimodast/tranformation/` - this folder contains transformation logic (under `models/`) and also tests and documentation.
+- `/project/mimodast/tranformation/` - this folder contains transformation logic (under `models/`). It also includes configuration for dbt, tests, documentation and various other items.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -376,7 +375,7 @@ The following differences are noteworthy:
         x-key: $ENV_GIE_XKEY
 ```
 
-3. Schedule/orhestration is not configured using `meltano.yml` but instead with two manually coded Airflow DAGs. The Python file containing the code for these can be found at `/project/mimodast/orchestrate/dags/gie_dag.py`.
+3. Schedule/orchestration is not configured using `meltano.yml` but instead with two manually coded Airflow DAGs. The Python file containing the code for these can be found at `/project/mimodast/orchestrate/dags/gie_dag.py`.
     - The backfill dag captures historic data from source. To specify the date range, two Airflow variables are used. These values can be changed using the Airflow UI.
     - It takes some time (<1 minute) for the new date range to be reflected in the DAG.
     - Note that using Airflow variables in a DAG in this way is not a [best practice][AirflowBestPractices-url] design but is used for simplicity.
