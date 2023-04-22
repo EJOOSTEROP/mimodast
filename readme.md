@@ -98,7 +98,7 @@ A minimal modern data stack with working data pipelines in a single Docker conta
 - [Superset][Superset-url] - data visualization and exploration platform
 - Sample data pipelines with [USGS Earthquake][USGSEarthquakeAPI-url] data and [European Gas Inventory][GIEAPI-url] levels.
 
-Explore the functionality of the tools by using the examples as-is; and to modify and expand on the exmples for further exploration.
+Explore the functionality of the tools by using the examples as-is; modify and expand on the examples for further exploration.
 
 This is a convenient starting point for exploration. The project is not a showcase of all or even the best functionality that each tool has to offer.
 
@@ -140,8 +140,7 @@ Have [Docker Desktop][DockerDesktop-url] installed.
 
 ### Installation
 
-In order to create the docker container you can do the following:
-
+<!--
 1. Clone this GIT repo:
    ```sh
    git clone https://github.com/EJOOSTEROP/mimodast.git
@@ -153,15 +152,21 @@ In order to create the docker container you can do the following:
     ```docker 
     docker create -p5005:5000 -p8093:8088 -p8085:8080 -p8094:8089 -p8095:8090 -p8096:8091 --name mimodast mimodast
     ```
-2. Optionally (required for the [European Gas Inventory][GIEAPI-url] dataset) copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
+-->
+1. Create a container from the published docker image:
+    ```docker
+    docker create -p8093:8088 -p8085:8080 -p8094:8089 --name mimodast ghcr.io/ejoosterop/mimodast
+    ```
+2. Optionally (required for the [European Gas Inventory][GIEAPI-url] dataset; this can safely be done at a later stage) copy a `.env` file containing the  <a href="#api-key">API key</a> as explained below:
     ```docker
     docker cp .env mimodast:/project/mimodast/.env
     ```
-2. Start the container.
+2. Start the container (using the Docker Desktop UI or command line).
 2. For starters:
-    - Open the docker container terminal and peruse the meltano.yml file and other files/folders at `project\mimodast\`.
+    - Open the docker container terminal and peruse the meltano.yml file and other files/folders at `/project/mimodast/`.
     - Navigate to localhost:8085 to see the Airflow orhestrator (incl scheduler) interface. Use admin/admin as username/password.
     - Navigate to localhost:8093 to see the Superset dashboard. Use admin/admin as username/password.
+    - Navigate to localhost:8094 to see data pipeline documentation (from dbt).
   - NOTE: allow for some time (~1 minute) for the container to start up all processes. On first startup wait for the completion of the  first run of the USGS pipeline before reviewing Superset.
 
 
@@ -174,7 +179,7 @@ The image contains ELT pipelines for two data sets. The [USGS Earthquake][USGSEa
 
 For the [GIE Gas Inventory][GIEAPI-url] dataset an API key is required. Create a free and immediate [GIE account][GIEAccount-url] to obtain the key.
 
-This key needs to be available as an environment variable (ENV_GIE_XKEY) in the Docker container (it is referenced in the `meltano.yml` configuration file). One way to accomplish this is by creating a `.env` file in the `/projet/mimodast/` folder containing:
+This key needs to be available as an environment variable (ENV_GIE_XKEY) in the Docker container (it is referenced in the `meltano.yml` configuration file) in order to run the GIE pipelines. One way to accomplish this is by creating a `.env` file in the `/projet/mimodast/` folder containing:
 >`ENV_GIE_XKEY="YOUR-API-KEY"`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -200,15 +205,15 @@ Below we highlight the core configuration for these components. For (much) more 
 
 ### Definition and Configuration
 
-The data pipelines are fully defined in a set of files. This includes the source definitions, schedules, dependencies, transformation logic, tests and documentation. (The reporting/dashboards in Superset are defined within Superset, but can be exported from there.)
+The data pipelines are fully defined in a set of files. This includes the source definitions, schedules, dependencies, transformation logic, tests and documentation. The reporting/dashboards in Superset are defined within Superset, but can be exported from there.
 
 These files are all found in the `/project/mimodast/` folder in the Docker container. It is best practice to capture this folder in a version control tool. Git is included in the Docker image.
 
 Some of the core files include:
 
-- `/project/mimodast/meltano.yml` - this contains items like the source specification, destination database and schedule.
+- `/project/mimodast/meltano.yml` - this includes configurations for data source specification, destination database, schedule and more.
 - `/project/mimodast/orhestration/dags/gie_dag.py` - python code defining how to orchestrate a data pipeline in Airflow. Note that the GIE data uses this manually created file, whereas the USGS data orhestration relies purely on logic defined in `meltano.yml`.
-- `/project/mimodast/tranformation/` - this folder contains transformation logic (under `models/`) and also tests and documentation.
+- `/project/mimodast/tranformation/` - this folder contains transformation logic (under `models/`). It also includes configuration for dbt, tests, documentation and various other items.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -370,7 +375,7 @@ The following differences are noteworthy:
         x-key: $ENV_GIE_XKEY
 ```
 
-3. Schedule/orhestration is not configured using `meltano.yml` but instead with two manually coded Airflow DAGs. The Python file containing the code for these can be found at `/project/mimodast/orchestrate/dags/gie_dag.py`.
+3. Schedule/orchestration is not configured using `meltano.yml` but instead with two manually coded Airflow DAGs. The Python file containing the code for these can be found at `/project/mimodast/orchestrate/dags/gie_dag.py`.
     - The backfill dag captures historic data from source. To specify the date range, two Airflow variables are used. These values can be changed using the Airflow UI.
     - It takes some time (<1 minute) for the new date range to be reflected in the DAG.
     - Note that using Airflow variables in a DAG in this way is not a [best practice][AirflowBestPractices-url] design but is used for simplicity.
@@ -395,15 +400,13 @@ The following differences are noteworthy:
 <!-- ROADMAP -->
 ## Roadmap
 
+<!--
 - [ ] Include [Great Expectations][GreatExpectations-url] for data quality purposes.
 - [ ] Add a dbt model using [PRQL][PRQL-url] language instead of SQL.
 - [ ] Add a metadata framework like Amundsen, OpenLineage or similar.
-
-<!--
 - [ ] Feature 3
     - [ ] Nested Feature
 -->
-
 See the [open issues](https://github.com/EJOOSTEROP/mimodast/issues) for a full list of proposed features and known issues.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
