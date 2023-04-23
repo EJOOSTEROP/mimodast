@@ -189,7 +189,12 @@ plugins:
         description: Runs dbt USGS (earthquake data) jobs instead of all dbt jobs.
       gie:
         args: run --select tag:gie
-        description: Runs dbt GIE (gas inventory data) jobs instead of all dbt jobs.    
+        description: Runs dbt GIE (gas inventory data) jobs instead of all dbt jobs. 
+  - name: great_expectations
+    variant: great-expectations
+    pip_url: great_expectations[sqlalchemy]
+      duckdb-engine==0.7.0
+#      sqlalchemy==1.4.47         
 jobs:
 - name: usgs-to-duckdb-rpt
   tasks:
