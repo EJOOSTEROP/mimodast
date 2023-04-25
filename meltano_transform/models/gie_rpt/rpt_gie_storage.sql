@@ -25,7 +25,7 @@ FROM
 
 COMPANY AS
 (SELECT
-  gasdaystart,
+        gasdaystart::DATE gasdaystart,
 	code as company_eic,
 	name as company_name,
 	TRY_CAST(gasinstorage AS DOUBLE)  as comp_gasinstorage,
@@ -51,7 +51,9 @@ select
         workinggasvolume,
         comp_workinggasvolume,
         injection,
-        withdrawal
+        withdrawal,
+        year(sso.gasdaystart) as reporting_year,
+        make_date(2000, month(sso.gasdaystart), day(sso.gasdaystart)) as reporting_day
 from SSO left join COMPANY 
 on sso.gasdaystart = COMPANY.gasdaystart 
 and 
