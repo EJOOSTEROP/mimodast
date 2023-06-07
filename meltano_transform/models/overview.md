@@ -18,4 +18,3 @@ This **dbt project** defines the transformation and tests related to the two dat
 [GIEAccount-url]: https://agsi.gie.eu/account
 
 {% enddocs %}
-
