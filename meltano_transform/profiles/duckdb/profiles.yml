@@ -21,3 +21,17 @@ meltano:
       #path: "{{ env_var('DBT_DUCKDB_PATH') }}"
       path: "/project/data/prod/data.duckdb"
       threads: 4
+elementary:
+  outputs:
+    default:
+      type: duckdb
+      #path: "{{ env_var('DBT_DUCKDB_PATH') }}"
+      path: "/project/data/dev/data.duckdb"
+      database: data
+      threads: 1
+    dev:
+      type: duckdb
+      #path: "{{ env_var('DBT_DUCKDB_PATH') }}"
+      path: "/project/data/dev/data.duckdb"
+      database: data
+      threads: 1      

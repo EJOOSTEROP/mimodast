@@ -194,7 +194,13 @@ plugins:
     variant: great-expectations
     pip_url: great_expectations[sqlalchemy]
       duckdb-engine==0.7.0
-#      sqlalchemy==1.4.47         
+#      sqlalchemy==1.4.47  
+  - name: elementary
+    variant: elementary
+    pip_url: elementary-data[sqlalchemy]==0.8.0 git+https://github.com/potloc/elementary-ext.git
+      duckdb-engine==0.7.0
+#commands:
+# dbt run --select elementary     
 jobs:
 - name: usgs-to-duckdb-rpt
   tasks:
